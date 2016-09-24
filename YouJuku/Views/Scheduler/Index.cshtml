@@ -1,0 +1,16 @@
+﻿@model DHTMLX.Scheduler.DHXScheduler
+
+@{
+    ViewBag.Title = "YouJuku Scheduler";
+}
+@section scripts{
+    <script src="~/Scripts/scheduler/scheduler.js"></script>
+    @Html.Raw(Model.GenerateLinks())
+    <script>
+        @Html.Raw(Model.GenerateJSCode())
+    </script>
+}
+
+<div class="calendar-container">
+    @Html.Raw(Model.GenerateMarkup())
+</div>
