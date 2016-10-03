@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Web;
 using System.Web.Mvc;
 using DHTMLX.Common;
@@ -16,52 +17,80 @@ namespace YouJuku.Controllers
     public class SchedulerController : Controller
     {
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
-
+        private const int FirstHour = 14;
+        private const int LastHour = 23;
+        private const int HourSize = 132;
         // GET: Scheduler
         public ActionResult Index()
         {
             var scheduler = new DHXScheduler(this)
             {
-                Skin = DHXScheduler.Skins.Flat,
+                //Skin = DHXScheduler.Skins.Flat,
                 LoadData = true,
-                EnableDataprocessor = true,
-                InitialDate = new DateTime(2013, 5, 5)
+                EnableDataprocessor = true
+                //InitialDate = new DateTime(2016, 1, 1)
             };
+
             scheduler.Extensions.Add(SchedulerExtensions.Extension.ActiveLinks);
-            scheduler.Extensions.Add(SchedulerExtensions.Extension.Collision);
-            scheduler.EnableDynamicLoading(SchedulerDataLoader.DynamicalLoadingMode.Month);
+            //scheduler.Extensions.Add(SchedulerExtensions.Extension.Collision);
+            //scheduler.EnableDynamicLoading(SchedulerDataLoader.DynamicalLoadingMode.Month);
+            scheduler.Extensions.Add(SchedulerExtensions.Extension.Multisection);
 
-            scheduler.BeforeInit.Add("schedulerAdmin.init()");
+            //get grid settings
+            scheduler.Config.first_hour = FirstHour;
+            scheduler.Config.last_hour = LastHour;
+            scheduler.Config.hour_size_px = HourSize;
+            scheduler.Config.week_date = "%l";
+            scheduler.Config.day_date = "%D";
+            scheduler.Config.hour_date = "%h:%i %A";
 
-            scheduler.Lightbox.Add(new LightboxText("text", "Description"));
-            var context = new ApplicationDbContext();
-            var users = context.Users.Select(u => new { key = u.Id, label = u.Email }).ToList();
+            //set duration of time period on light box
+            scheduler.Config.event_duration = 60; 
+            scheduler.Config.auto_end_date = true;
 
-            var select = new LightboxSelect("UserId", "User");
-            select.ServerList = "users";
-            select.AddOptions(users);
+            var users = _context.Users;
+            var options = new object[users.Count()];
+            var timeline = new TimelineView("timeline", "user_id")
+            {
+                RenderMode = TimelineView.RenderModes.Bar,
+                X_Start = 14,
+                X_Size = 10,
+                FirstHour = 2,
+                LastHour = 11,
+                X_Date = "%h:%i %A"
+            };
+            
+            var i = 0;
+            foreach (var user in users)
+            {
+                options[i] = new {key = user.Id, label = user.Email};
+                i++;
+            }
 
-            scheduler.Lightbox.Add(select);
-            scheduler.Lightbox.Add(new LightboxTime("time", "Time period"));
+            timeline.AddOptions(options);
+            scheduler.Views.Add(timeline);
+        
+            scheduler.BeforeInit.Add("youjukuScheduler.init()");
+            AddLightBox(scheduler);
 
             return View(scheduler);
         }
 
-        public ContentResult Data(DateTime from, DateTime to)
+        public ContentResult Data(int? timeshift, Int64? uid/*DateTime from, DateTime to*/)
         {
             var appUserId = User.Identity.GetUserId();
  
             // load current user's events as appointments
-            var apps = _context.SchedulerEvents
-                .Where(e => e.UserId == appUserId /*&& e.StartDate < to && e.EndDate > from*/).ToList();
+            var events = _context.SchedulerEvents.ToList();
+                //.Where(e => e.UserId == appUserId /*&& e.StartDate < to && e.EndDate > from*/).ToList();
  
             // load others as blocked intervals
             var blocked = _context.SchedulerEvents
                 .Where(e => e.UserId != appUserId /*&& e.StartDate < to && e.EndDate > from*/)
-                .Select(e => new { e.StartDate, e.EndDate}).ToList();
+                .Select(e => new { e.UserId, e.StartDate, e.EndDate}).ToList();
 
-            var response = new SchedulerAjaxData(apps);
-            response.ServerList.Add("blocked_time", blocked);
+            var response = new SchedulerAjaxData(events);
+            //response.ServerList.Add("blocked_time", blocked);
  
             return response;
         }
@@ -87,7 +116,7 @@ namespace YouJuku.Controllers
                         break;
                 }
                 _context.SaveChanges();
-                action.TargetId = changedEvent.ID;
+                action.TargetId = changedEvent.Id;
             }
             catch
             {
@@ -95,6 +124,20 @@ namespace YouJuku.Controllers
             }
  
             return (new AjaxSaveResponse(action));
+        }
+
+        private static void AddLightBox(DHXScheduler scheduler)
+        {
+            scheduler.Lightbox.Add(new LightboxText("text", "Class Notes"));
+            var context = new ApplicationDbContext();
+            var users = context.Users.Select(u => new { key = u.Id, label = u.Email, color = u.Color }).ToList();
+
+            var select = new LightboxSelect("UserId", "Teacher");
+            select.ServerList = "users";
+            select.AddOptions(users);
+
+            scheduler.Lightbox.Add(select);
+            scheduler.Lightbox.Add(new LightboxTime("time", "Time"));
         }
     }
 }

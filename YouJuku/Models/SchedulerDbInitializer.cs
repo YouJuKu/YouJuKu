@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -19,8 +14,8 @@ namespace YouJuku.Models
             var roles = new RoleManager<IdentityRole>(new
                                     RoleStore<IdentityRole>(context));
  
-            string name = "Admin@mail.com";
-            string password = "123456";
+            var name = "Admin@mail.com";
+            var password = "123456";
   
       
             // Create Admin role
@@ -46,14 +41,14 @@ namespace YouJuku.Models
             }
  
             // Create several test users
-            var test_users = new string[]{
+            var testUsers = new string[]{
                 "Alex@mail.com", 
                 "John@mail.com", 
                 "Sarah@mail.com", 
                 "Paul@mail.com"
             };
  
-            foreach (var username in test_users)
+            foreach (var username in testUsers)
             {
                 users.Create(new ApplicationUser { 
                     UserName = username, 

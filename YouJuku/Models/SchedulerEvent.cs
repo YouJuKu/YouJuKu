@@ -10,7 +10,7 @@ namespace YouJuku.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [DHXJson(Alias = "id")]
-        public int ID { get; set; }
+        public int Id { get; set; }
  
         [DHXJson(Alias = "text")]
         public string Text { get; set; }
@@ -21,6 +21,7 @@ namespace YouJuku.Models
         [DHXJson(Alias = "end_date")]
         public DateTime EndDate { get; set; }
  
+        [DHXJson(Alias = "user_id")]
         public string UserId { get; set; }
     }
 }
