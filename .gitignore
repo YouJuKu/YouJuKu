@@ -1,1 +1,5 @@
 /packages
+/YouJuku/obj
+/YouJuku/bin
+/YouJuku.Tests/obj
+/YouJuku.Tests/bin

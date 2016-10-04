@@ -11,7 +11,7 @@ namespace YouJuku.Controllers
     {
         public ActionResult Index()
         {
-            return RedirectToAction("Index", "Scheduler");
+            //return RedirectToAction("Index", "Scheduler");
             //if(User.IsInRole("Admin")) 
             // {
             //     return RedirectToAction("Index", "SchedulerAdmin");
@@ -20,6 +20,7 @@ namespace YouJuku.Controllers
             // {
             //     return RedirectToAction("Index", "Scheduler");
             // }
+            return View();
         }
 
         public ActionResult About()

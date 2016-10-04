@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Web;
 using System.Web.Mvc;
 using DHTMLX.Common;
 using DHTMLX.Scheduler;
@@ -20,20 +17,17 @@ namespace YouJuku.Controllers
         private const int FirstHour = 14;
         private const int LastHour = 23;
         private const int HourSize = 132;
+
         // GET: Scheduler
         public ActionResult Index()
         {
             var scheduler = new DHXScheduler(this)
             {
-                //Skin = DHXScheduler.Skins.Flat,
                 LoadData = true,
                 EnableDataprocessor = true
-                //InitialDate = new DateTime(2016, 1, 1)
             };
 
             scheduler.Extensions.Add(SchedulerExtensions.Extension.ActiveLinks);
-            //scheduler.Extensions.Add(SchedulerExtensions.Extension.Collision);
-            //scheduler.EnableDynamicLoading(SchedulerDataLoader.DynamicalLoadingMode.Month);
             scheduler.Extensions.Add(SchedulerExtensions.Extension.Multisection);
 
             //get grid settings
@@ -82,15 +76,13 @@ namespace YouJuku.Controllers
  
             // load current user's events as appointments
             var events = _context.SchedulerEvents.ToList();
-                //.Where(e => e.UserId == appUserId /*&& e.StartDate < to && e.EndDate > from*/).ToList();
  
             // load others as blocked intervals
             var blocked = _context.SchedulerEvents
-                .Where(e => e.UserId != appUserId /*&& e.StartDate < to && e.EndDate > from*/)
+                .Where(e => e.UserId != appUserId)
                 .Select(e => new { e.UserId, e.StartDate, e.EndDate}).ToList();
 
             var response = new SchedulerAjaxData(events);
-            //response.ServerList.Add("blocked_time", blocked);
  
             return response;
         }

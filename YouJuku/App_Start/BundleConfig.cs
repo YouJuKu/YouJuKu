@@ -20,12 +20,31 @@ namespace YouJuku
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+                        "~/Scripts/bootstrap.js",
+                        "~/Scripts/respond.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
+                        "~/Scripts/angular.min.js", 
+                        "~/Scripts/angular-animate.min.js", 
+                        "~/Scripts/angular-route.js",
+                        "~/Scripts/angular-aria.min.js",
+                        "~/Scripts/angular-messages.min.js",
+                        "~/Scripts/angular-material/angular-material.min.js"
+                        ));
+
+            bundles.Add(new ScriptBundle("~/bundles/scheduler").Include(
+                        "~/Scripts/youjuku/scheduler.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/tabs").Include(
+                        "~/Scripts/youjuku/tabs.js"));
+
+            bundles.Add(new StyleBundle("~/bundles/tabs").Include(
+                        "~/Content/youjuku/tabs.css"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                        "~/Content/bootstrap.css",
+                        "~/Content/site.css",
+                        "~/Content/youjuku/tabs.css"));
         }
     }
 }

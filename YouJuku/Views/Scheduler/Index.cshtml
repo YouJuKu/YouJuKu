@@ -1,10 +1,10 @@
 ﻿@model DHTMLX.Scheduler.DHXScheduler
 
 @{
-    ViewBag.Title = "YouJuku Scheduler";
+    ViewBag.Title = "Schedule";
 }
+@Scripts.Render("~/bundles/scheduler")
 @section scripts{
-    <script src="~/Scripts/scheduler/scheduler.js"></script>
     @Html.Raw(Model.GenerateLinks())
     <script>
         @Html.Raw(Model.GenerateJSCode())
