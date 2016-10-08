@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using DHTMLX.Scheduler;
 using Microsoft.AspNet.Identity;
@@ -12,6 +11,13 @@ namespace YouJuku.Models
     {
         [DHXJson(Alias = "color")]
         public string Color { get; set; }
+
+        [DHXJson(Alias = "first_name")]
+        public string FirstName { get; set; }
+
+        [DHXJson(Alias = "last_name")]
+        public string LastName { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

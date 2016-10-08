@@ -3,3 +3,5 @@
 /YouJuku/bin
 /YouJuku.Tests/obj
 /YouJuku.Tests/bin
+/YouJuku/App_Data/*.ldf
+/YouJuku/App_Data/*.mdf

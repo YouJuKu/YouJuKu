@@ -1,21 +1,29 @@
+using System.Collections.Generic;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+
 namespace YouJuku.Migrations
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
-
-    internal sealed class Configuration : DbMigrationsConfiguration<YouJuku.Models.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Models.ApplicationDbContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
             ContextKey = "YouJuku.Models.ApplicationDbContext";
         }
 
-        protected override void Seed(YouJuku.Models.ApplicationDbContext context)
+        protected override void Seed(Models.ApplicationDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            //This method will be called after migrating to the latest version.
+            var roles = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            foreach (var role in new List<string> {"Admin", "User"})
+            {
+                if (!roles.RoleExists(role))
+                {
+                    roles.Create(new IdentityRole(role));
+                }
+            }
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data. E.g.

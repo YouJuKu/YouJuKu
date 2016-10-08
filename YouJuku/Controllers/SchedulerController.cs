@@ -42,7 +42,7 @@ namespace YouJuku.Controllers
             scheduler.Config.event_duration = 60; 
             scheduler.Config.auto_end_date = true;
 
-            var users = _context.Users;
+            var users = _context.Users.ToList();
             var options = new object[users.Count()];
             var timeline = new TimelineView("timeline", "user_id")
             {
@@ -53,12 +53,10 @@ namespace YouJuku.Controllers
                 LastHour = 11,
                 X_Date = "%h:%i %A"
             };
-            
-            var i = 0;
-            foreach (var user in users)
+
+            for (var i = 0; i < users.Count(); i++)
             {
-                options[i] = new {key = user.Id, label = user.Email};
-                i++;
+                options[i] = new {key = users[i].Id, label = $"{users[i].FirstName} {users[i].LastName}" };
             }
 
             timeline.AddOptions(options);
