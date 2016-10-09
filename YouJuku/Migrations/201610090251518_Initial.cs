@@ -43,14 +43,34 @@ namespace YouJuku.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "dbo.Students",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        FirstName = c.String(nullable: false),
+                        LastName = c.String(nullable: false),
+                        Address = c.String(nullable: false),
+                        HomePhone = c.String(),
+                        CellPhone = c.String(),
+                        Email = c.String(nullable: false),
+                        StartDate = c.DateTime(nullable: false),
+                        EndDate = c.DateTime(nullable: false),
+                        Grade = c.String(),
+                        Sibling = c.String(),
+                        IsActive = c.Boolean(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "dbo.AspNetUsers",
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
-                        Color = c.String(),
+                        UserName = c.String(nullable: false, maxLength: 256),
+                        Email = c.String(maxLength: 256),
                         FirstName = c.String(),
                         LastName = c.String(),
-                        Email = c.String(maxLength: 256),
+                        Color = c.String(),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),
                         SecurityStamp = c.String(),
@@ -60,7 +80,6 @@ namespace YouJuku.Migrations
                         LockoutEndDateUtc = c.DateTime(),
                         LockoutEnabled = c.Boolean(nullable: false),
                         AccessFailedCount = c.Int(nullable: false),
-                        UserName = c.String(nullable: false, maxLength: 256),
                     })
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.UserName, unique: true, name: "UserNameIndex");
@@ -107,6 +126,7 @@ namespace YouJuku.Migrations
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
+            DropTable("dbo.Students");
             DropTable("dbo.SchedulerEvents");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");

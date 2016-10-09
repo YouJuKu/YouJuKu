@@ -19,5 +19,7 @@ namespace YouJuku.Models
         }
  
         public DbSet<SchedulerEvent> SchedulerEvents { get; set; }
+
+        public DbSet<Student> Students { get; set; }
     }
 }

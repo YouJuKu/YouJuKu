@@ -213,12 +213,17 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
+    <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610081828291_Initial.cs" />
-    <Compile Include="Migrations\201610081828291_Initial.Designer.cs">
-      <DependentUpon>201610081828291_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201610090251518_Initial.cs" />
+    <Compile Include="Migrations\201610090251518_Initial.Designer.cs">
+      <DependentUpon>201610090251518_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610090419137_age.cs" />
+    <Compile Include="Migrations\201610090419137_age.Designer.cs">
+      <DependentUpon>201610090419137_age.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -227,6 +232,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\SchedulerDbInitializer.cs" />
     <Compile Include="Models\SchedulerEvent.cs" />
+    <Compile Include="Models\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -1295,6 +1301,11 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Scheduler\Index.cshtml" />
     <Content Include="Scripts\version.json" />
+    <Content Include="Views\Students\Create.cshtml" />
+    <Content Include="Views\Students\Delete.cshtml" />
+    <Content Include="Views\Students\Details.cshtml" />
+    <Content Include="Views\Students\Edit.cshtml" />
+    <Content Include="Views\Students\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1305,8 +1316,11 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201610081828291_Initial.resx">
-      <DependentUpon>201610081828291_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610090251518_Initial.resx">
+      <DependentUpon>201610090251518_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610090419137_age.resx">
+      <DependentUpon>201610090419137_age.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

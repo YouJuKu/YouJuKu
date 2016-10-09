@@ -1,23 +1,7 @@
-﻿//var app = angular.module('gridApp', ['ngGrid']);
-//app.controller('gridController', function ($scope) {
-//    $scope.gridData = [{ name: "Moroni", age: 50 },
-//                     { name: "Tiancum", age: 43 },
-//                     { name: "Jacob", age: 27 },
-//                     { name: "Nephi", age: 29 },
-//                     { name: "Enos", age: 34 }];
-//    $scope.gridOptions = {
-//        data: 'gridData',
-//        enableCellSelection: true,
-//        enableRowSelection: false,
-//        enableCellEdit: true,
-//        columnDefs: [{ field: 'name', displayName: 'Name', enableCellEdit: true },
-//                     { field: 'age', displayName: 'Age', enableCellEdit: true }]
-//    };
-//});
-var app = angular.module("gridApp", ["ngGrid"]);
+﻿var app = angular.module("gridApp", ["ngGrid"]);
 app.controller("gridController",
-    function($scope, $timeout, StatusesConstant) {
-        $scope.statuses = StatusesConstant;
+    function ($scope, $timeout, statuses, studentService) {
+        $scope.statuses = statuses;
         $scope
             .cellInputEditableTemplate =
             '<input ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="updateEntity(row)" />';
@@ -25,14 +9,16 @@ app.controller("gridController",
             .cellSelectEditableTemplate =
             '<select ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-options="id as name for (id, name) in statuses" ng-blur="updateEntity(row)" />';
 
-        $scope.list = [
-            { name: "Fred", age: 45, status: 1 },
-            { name: "Julie", age: 29, status: 2 },
-            { name: "John", age: 67, status: 1 }
-        ];
+        var service = studentService.getStudents();
+        service.then(function(d) {
+            $scope.students = studentJson(d.data);
+            },
+            function(error) {
+                console.log(error);
+            });
 
         $scope.gridOptions = {
-            data: "list",
+            data: "students",
             enableRowSelection: false,
             enableCellEditOnFocus: true,
             multiSelect: false,
@@ -43,7 +29,31 @@ app.controller("gridController",
                     enableCellEditOnFocus: true,
                     editableCellTemplate: $scope.cellInputEditableTemplate
                 },
-                { field: "age", displayName: "Age", enableCellEdit: false },
+                {
+                    field: "address",
+                    displayName: "Address",
+                    enableCellEdit: true
+                },
+                {
+                    field: "homephone",
+                    displayName: "Home Phone",
+                    enableCellEdit: true
+                },
+                {
+                    field: "cellphone",
+                    displayName: "Cell Phone",
+                    enableCellEdit: true
+                },
+                {
+                    field: "email",
+                    displayName: "Email",
+                    enableCellEdit: true
+                },
+                {
+                    field: "age",
+                    displayName: "Age",
+                    enableCellEdit: true
+                },
                 {
                     field: "status",
                     displayName: "Status",
@@ -76,26 +86,47 @@ app.controller("gridController",
                     500);
             }
         };
+})
+.directive("ngBlur",
+    function(scope, element, attributes) {
+        element.bind("blur",
+            function() {
+                scope.$apply(attributes.ngBlur);
+            });
     })
-    .directive("ngBlur",
-        function(scope, element, attributes) {
-            element.bind("blur",
-                function() {
-                    scope.$apply(attributes.ngBlur);
-                });
-        })
-    .filter("mapStatus", function (StatusesConstant) {
-        return function (input) {
-            if (StatusesConstant[input]) {
-                return StatusesConstant[input];
-            } else {
-                return "unknown";
-            }
-        };
-    })
-    .factory("StatusesConstant", function () {
-        return {
-            1: "active",
-            2: "inactive"
-        };
-    });
+.filter("mapStatus", function (statuses) {
+    return function (input) {
+        if (statuses[input]) {
+            return statuses[input];
+        } else {
+            return "unknown";
+        }
+    };
+})
+.factory("statuses", function () {
+    return {
+        false: "inactive",
+        true: "active"
+    };
+});
+app.service("studentService", function ($http) {
+    this.getStudents = function () {
+        return $http
+        ({
+            url: "/Students/GetStudents", 
+            method: "GET"
+        });
+    };
+});
+
+function studentJson(data) {
+    var array = [];
+    for (var i = 0; i < data.length; i++) {
+        array.push
+        ({
+            name: data[i].FirstName + " " + data[i].LastName, address: data[i].Address, homephone: data[i].HomePhone,
+            cellphone: data[i].CellPhone, email: data[i].Email, age: data[i].Age, status: data[i].IsActive
+        });
+    }
+    return array;
+}
